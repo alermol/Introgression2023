@@ -24,7 +24,7 @@ grep -o 'GO:[0-9]*' annotation.tab | sort -u > annot_go_terms.tab
 while read line
 do
     descr=$(grep $line go_extracted.tsv | cut -f 2 | tr ' ' '_')
-    grep $line annotation.tab | cut -f 1 | tr '\n' '\t' | awk -v l=$line -v d=$descr -v OFS='\t' '{print l,d,$0}'
+    grep $line annotation.tab | cut -f 1 | sed 's/\.[1-9]$//g' | tr '\n' '\t' | awk -v l=$line -v d=$descr -v OFS='\t' '{print l,d,$0}'
 done < annot_go_terms.tab  | tr '_' ' ' > result.gmt
 
 grep 'biological_process' go_extracted.tsv | cut -f 1 | grep -f - result.gmt > ../GO:BP.gmt
